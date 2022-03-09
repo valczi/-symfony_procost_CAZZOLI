@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Employe;
 use App\Entity\Metier;
 use App\Entity\Project;
+use App\Entity\Worktime;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -43,7 +44,7 @@ public function loadJobs():void{
 
 public function loadProject():void{
     for($i = 0; $i < 20 ; $i++){
-        $projet =(new Project())->setName("Projet : ".$i)->setDescription("Description du project : ".$i)->setPrice(mt_rand(500,2000));
+        $projet =(new Project())->setNom("Projet : ".$i)->setDescription("Description du project : ".$i)->setCost(mt_rand(500,2000));
         $this->manager->persist($projet);
         $this->addReference(Project::class.$i,$projet);
     }
@@ -55,6 +56,7 @@ public function getDate(DateTime $start, DateTime $end):DateTime {
     $randomDate->setTimestamp($randomTimestamp);
     return $randomDate;
 }
+
 
 public function loadEmployees(): void{
     $debut = new DateTime('2010-10-10');
@@ -70,11 +72,17 @@ public function loadEmployees(): void{
             $projet2=$this->getReference(Project::class . random_int(0,19));
         }while($projet==$projet2);
 
-        $Employe = (new Employe())->setName('prénom :  ' . $i)->setSurname('nom : ' . $i)->setCost(mt_rand(1000, 5000))->setHired($randomDate)->setJob($metier)->setMail('mail'.$i.'@yes.fr'); 
-        $Employe->addProject($projet)->addProject($projet2);
-        
-        $this->manager->persist($Employe); 
+        $Worktime1=(new Worktime())->setProjet($projet)->setTime(random_int(0,20));
+        $Worktime2=(new Worktime())->setProjet($projet2)->setTime(random_int(0,20));
 
+        $this->manager->persist($Worktime1);
+        $this->addReference(Worktime::class.uniqid(),$Worktime1);
+        $this->manager->persist($Worktime2);
+        $this->addReference(Worktime::class.uniqid(),$Worktime2);
+
+        $Employe = (new Employe())->setName('prénom :  ' . $i)->setSurname('nom : ' . $i)->setCost(mt_rand(1000, 5000))->setHired($randomDate)->setJob($metier)->setMail('mail'.$i.'@yes.fr'); 
+        $Employe->addWorktime($Worktime1)->addWorktime($Worktime2);
+        $this->manager->persist($Employe); 
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\EmployeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,25 +12,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController{
 
 
-    public function __construct(){
+    private EmployeRepository $employeRepo;
+
+    public function __construct(EmployeRepository $employeRepo){
+        $this->employeRepo=$employeRepo;
     }
 
     /**
      * @Route("/", name="main_homepage")
      */
     public function homepage():Response{
-        $date = getdate();
         return $this->render('core/index.html.twig', [
         ]);
     }
 
     
     /**
-     * @Route("/list", name="list_page")
+     * @Route("/list", name="list_employe")
      */
     public function list():Response{
-        $date = getdate();
-        return $this->render('core/list.html.twig', [
+        return $this->render('core/list_employe.html.twig', [
+            'employes'=>$this->employeRepo->findAll(),
         ]);
     }
 
@@ -37,7 +40,6 @@ class MainController extends AbstractController{
      * @Route("/form", name="form_page")
      */
     public function form():Response{
-        $date = getdate();
         return $this->render('core/form.html.twig', [
         ]);
     }
@@ -46,7 +48,6 @@ class MainController extends AbstractController{
      * @Route("/detail", name="detail_page")
      */
     public function detail():Response{
-        $date = getdate();
         return $this->render('core/detail.html.twig', [
         ]);
     }

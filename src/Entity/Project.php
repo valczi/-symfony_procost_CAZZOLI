@@ -3,44 +3,45 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\DateTime as ConstraintsDateTime;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
-
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private $nom;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 2500)]
     private $description;
 
     #[ORM\Column(type: 'integer')]
-    private $price;
+    private $cost;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
-     /**
-   * @ORM\Column(type="date", options={"default"=false})
+  /**
+   * @ORM\Column(type="datetime_immutable", options={"default"=false})
    */
-    private $delivered;
+    private $DeliveredAt;
 
-    #[ORM\ManyToMany(targetEntity: Employe::class, mappedBy: 'projects')]
-    private $employes;
+    #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Worktime::class)]
+    private $worktimes;
 
     public function __construct()
     {
-        $this->createdAt=new \DateTime();
-        $this->employes = new ArrayCollection();
+        $this->worktimes = new ArrayCollection();
+        $this->createdAt=new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -48,14 +49,14 @@ class Project
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): self
+    public function setNom(string $nom): self
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }
@@ -72,64 +73,67 @@ class Project
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getCost(): ?int
     {
-        return $this->price;
+        return $this->cost;
     }
 
-    public function setPrice(int $price): self
+    public function setCost(int $cost): self
     {
-        $this->price = $price;
+        $this->cost = $cost;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDelivered(): ?\DateTimeInterface
+    public function getDeliveredAt(): ?\DateTimeImmutable
     {
-        return $this->delivered;
+        return $this->DeliveredAt;
     }
 
-    public function setDelivered(\DateTimeInterface $delivered): self
+    public function setDeliveredAt(\DateTimeImmutable $DeliveredAt): self
     {
-        $this->delivered = $delivered;
+        $this->DeliveredAt = $DeliveredAt;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Employe>
+     * @return Collection<int, Worktime>
      */
-    public function getEmployes(): Collection
+    public function getWorktimes(): Collection
     {
-        return $this->employes;
+        return $this->worktimes;
     }
 
-    public function addEmploye(Employe $employe): self
+    public function addWorktime(Worktime $worktime): self
     {
-        if (!$this->employes->contains($employe)) {
-            $this->employes[] = $employe;
-            $employe->addProject($this);
+        if (!$this->worktimes->contains($worktime)) {
+            $this->worktimes[] = $worktime;
+            $worktime->setProjet($this);
         }
 
         return $this;
     }
 
-    public function removeEmploye(Employe $employe): self
+    public function removeWorktime(Worktime $worktime): self
     {
-        if ($this->employes->removeElement($employe)) {
-            $employe->removeProject($this);
+        if ($this->worktimes->removeElement($worktime)) {
+            // set the owning side to null (unless already changed)
+            if ($worktime->getProjet() === $this) {
+                $worktime->setProjet(null);
+            }
         }
 
         return $this;

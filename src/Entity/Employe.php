@@ -30,16 +30,15 @@ class Employe
     #[ORM\Column(type: 'date')]
     private $hired;
 
-    #[ORM\ManyToOne(targetEntity: Metier::class, inversedBy: 'employes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $job;
+    #[ORM\OneToMany(mappedBy: 'employe', targetEntity: Worktime::class)]
+    private $worktimes;
 
-    #[ORM\ManyToMany(targetEntity: Project::class, inversedBy: 'employes')]
-    private $projects;
+    #[ORM\ManyToOne(targetEntity: Metier::class, inversedBy: 'employes')]
+    private $job;
 
     public function __construct()
     {
-        $this->projects = new ArrayCollection();
+        $this->worktimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,38 +106,44 @@ class Employe
         return $this;
     }
 
-    public function getJob(): ?Metier
-    {
-        return $this->job;
-    }
-
-    public function setJob(?Metier $job): self
-    {
-        $this->job = $job;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, Project>
+     * @return Collection<int, Worktime>
      */
-    public function getProjects(): Collection
+    public function getWorktimes(): Collection
     {
-        return $this->projects;
+        return $this->worktimes;
     }
 
-    public function addProject(Project $project): self
+    public function addWorktime(Worktime $worktime): self
     {
-        if (!$this->projects->contains($project)) {
-            $this->projects[] = $project;
+        if (!$this->worktimes->contains($worktime)) {
+            $this->worktimes[] = $worktime;
+            $worktime->setEmploye($this);
         }
 
         return $this;
     }
 
-    public function removeProject(Project $project): self
+    public function removeWorktime(Worktime $worktime): self
     {
-        $this->projects->removeElement($project);
+        if ($this->worktimes->removeElement($worktime)) {
+            // set the owning side to null (unless already changed)
+            if ($worktime->getEmploye() === $this) {
+                $worktime->setEmploye(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getJob(): ?metier
+    {
+        return $this->job;
+    }
+
+    public function setJob(?metier $job): self
+    {
+        $this->job = $job;
 
         return $this;
     }
