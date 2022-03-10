@@ -1,0 +1,61 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <body class="app sidebar-mini">
+        <main class="app-content">
+            <div class="app-title">
+                <div>
+                    <h1><i class="fa fa-users"></i>&nbsp;Projects</h1>
+                </div>
+                <ul class="app-breadcrumb breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="#"><i class="fa fa-home fa-lg"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">Projects</li>
+                </ul>
+            </div>
+            <div class="tile pb-5">
+                <a href="form.html" class="btn btn-primary float-right mb-4"><i class="fa fa-plus-circle mr-2"></i>Ajouter un Project</a>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>description</th>
+                                <th>coût</th>
+                                <th>création</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for project in projects %} 
+					{{ include('card/_projet-card.html.twig', {project: project}) }}
+                    {% else %}
+                        <div>Aucun projet disponible</div>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <hr/>
+                <nav class="float-right">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">1<span class="sr-only">(current)</span></span>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a></li>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </main>
+    </body>
+        {% endblock %}

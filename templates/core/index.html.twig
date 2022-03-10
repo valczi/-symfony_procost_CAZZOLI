@@ -15,7 +15,7 @@
                                 <i class="icon fa fa-spinner fa-3x" aria-hidden="true"></i>
                                 <div class="info">
                                     <p class="text-muted text-sm text-uppercase">Projets en cours</p>
-                                    <p><strong>11</strong></p>
+                                    <p><strong>{{inProgress}}</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -24,7 +24,7 @@
                                 <i class="icon fa fa-check-square-o fa-3x" aria-hidden="true"></i>
                                 <div class="info">
                                     <p class="text-muted text-sm text-uppercase">Projets livrés</p>
-                                    <p><strong>76</strong></p>
+                                    <p><strong>{{delivered}}</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                                 <i class="icon fa fa-users fa-3x"></i>
                                 <div class="info">
                                     <p class="text-muted text-sm text-uppercase">Employés</p>
-                                    <p><strong>34</strong></p>
+                                    <p><strong>{{nbEmploye}}</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                                 <div class="card-header text-center">Taux de livraison</div>
                                 <div class="card-body">
                                     <p class="text-muted">
-                                        <i class="fa fa fa-check-square-o mr-2 text-primary"></i> 35% Livrés
+                                        <i class="fa fa fa-check-square-o mr-2 text-primary"></i> {{pourcentage}}% Livrés
                                     </p>
                                     <div class="embed-responsive embed-responsive-16by9">
                                         <canvas id="delivered-chart" class="embed-responsive-item"></canvas>
@@ -209,7 +209,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js" integrity="sha256-oSgtFCCmHWRPQ/JmR4OoZ3Xke1Pw4v50uh6pLcu+fIc=" crossorigin="anonymous"></script>
         <script>
             var ratioData = [70, 30];
-            var deliveredData = [35, 65];
+            var deliveredData = [{{pourcentage}}, 100-{{pourcentage}}];
         </script>
         <script src="js/dashboard.js"></script>
 

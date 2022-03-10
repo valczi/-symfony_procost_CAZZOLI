@@ -61,6 +61,10 @@ class Metier
         return $this;
     }
 
+    public function nbEmploye():int{
+        return sizeof($this->employes);
+    }
+
     public function removeEmploye(Employe $employe): self
     {
         if ($this->employes->removeElement($employe)) {
