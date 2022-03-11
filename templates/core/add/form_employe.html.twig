@@ -1,0 +1,107 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<html lang="fr">
+        <main class="app-content">
+            <div class="app-title">
+                <div>
+                    <h1><i class="fa fa-users"></i>&nbsp;Edition d'un employé</h1>
+                </div>
+                <ul class="app-breadcrumb breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="#"><i class="fa fa-home fa-lg"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Employés</a>
+                    </li>
+                    <li class="breadcrumb-item">Edition d'un employé</li>
+                </ul>
+            </div>
+            <div class="tile">
+            {% for flash_type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ flash_type }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+
+
+                {{form_start(form)}}
+                <div class="form-horizontal">
+                    <section>
+                        <h3>Informations générales</h3>
+                        <div class="row mt-4">
+                            <div class="offset-md-4 col-md-8">
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Prénom</label>
+                                    <div class="col-md-9">
+                                            {{form_errors(form.name)}}
+                                            {{form_widget(form.name, {'attr':{'class' : 'form-control','placeholder':form.name.vars.label}})}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Nom</label>
+                                    <div class="col-md-9">
+                                            {{form_errors(form.surname)}}
+                                            {{form_widget(form.surname, {'attr':{'class' : 'form-control','placeholder':form.surname.vars.label}})}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Email</label>
+                                    <div class="col-md-9">
+                                            {{form_errors(form.mail)}}
+                                            {{form_widget(form.mail, {'attr':{'class' : 'form-control'}})}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <hr/>
+                    <section>
+                        <h3>Production</h3>
+                        <div class="row mt-4">
+                            <div class="offset-md-4 col-md-8">
+                                <div class="form-group row">
+                                    <label for="select-job" class="control-label col-md-3">Métier</label>
+                                    <div class="col-md-9">
+
+                                        {{form_widget(form.job, {'attr' : {'class' : 'form-control' }})}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Coût journalier (en €)</label>
+                                    <div class="col-md-9">
+                                            {{form_errors(form.cost)}}
+                                            {{form_widget(form.cost, {'attr':{'class' : 'form-control'}})}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Date d'embauche</label>
+                                    <div class="col-md-9">
+                                        {{form_errors(form.hired)}}
+                                        {{form_widget(form.hired, {'attr':{'class' : 'form-control'}})}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <hr/>
+                    <div class="row">
+                        <div class="offset-md-6 col-md-6">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>Enregistrer</a>
+                        </div>
+                    </div>
+                </div>
+                {{form_end(form)}}
+
+
+
+            </div>
+        </main>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </body>
+</html>{% endblock %}
