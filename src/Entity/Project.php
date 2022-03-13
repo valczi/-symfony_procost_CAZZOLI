@@ -3,12 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\DateTime as ConstraintsDateTime;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -115,6 +113,15 @@ class Project
     public function getWorktimes(): Collection
     {
         return $this->worktimes;
+    }
+
+    public function getTotalCost():int{
+        $worktimes=$this->getWorktimes();
+        $cost=0;
+        foreach($worktimes as $worktime){
+            $cost+=$worktime->getEmploye()->getCost()*$worktime->getTime();
+        }
+        return $cost;
     }
 
     public function addWorktime(Worktime $worktime): self

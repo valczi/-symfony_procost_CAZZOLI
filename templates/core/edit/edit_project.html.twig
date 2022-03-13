@@ -4,16 +4,16 @@
         <main class="app-content">
             <div class="app-title">
                 <div>
-                    <h1><i class="fa fa-users"></i>&nbsp;Edition d'un Metier</h1>
+                    <h1><i class="fa fa-users"></i>&nbsp;Ajout d'un projet</h1>
                 </div>
                 <ul class="app-breadcrumb breadcrumb">
                     <li class="breadcrumb-item">
                         <a href={{path('main_homepage')}}><i class="fa fa-home fa-lg"></i></a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href={{path('list_metier')}}>Metiers</a>
+                        <a href={{path('list_project')}}>Projets</a>
                     </li>
-                    <li class="breadcrumb-item">Edition d'un Metier</li>
+                    <li class="breadcrumb-item">Ajout d'un projet</li>
                 </ul>
             </div>
             <div class="tile">
@@ -25,8 +25,6 @@
                 {% endfor %}
             {% endfor %}
 
-
-
                 {{form_start(form)}}
                 <div class="form-horizontal">
                     <section>
@@ -36,13 +34,27 @@
                                 <div class="form-group row">
                                     <label class="control-label col-md-3">Nom</label>
                                     <div class="col-md-9">
-                                            {{form_errors(form.name)}}
-                                            {{form_widget(form.name, {'attr':{'class' : 'form-control','placeholder':form.name.vars.label}})}}
+                                            {{form_errors(form.nom)}}
+                                            {{form_widget(form.nom, {'attr':{'class' : 'form-control','placeholder':form.nom.vars.label}})}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Description</label>
+                                    <div class="col-md-9">
+                                            {{form_errors(form.description)}}
+                                            {{form_widget(form.description, {'attr':{'class' : 'form-control','placeholder':form.description.vars.label}})}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Prix</label>
+                                    <div class="col-md-9">
+                                            {{form_errors(form.cost)}}
+                                            {{form_widget(form.cost, {'attr':{'class' : 'form-control'}})}}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    <hr/>
                     <div class="row">
                         <div class="offset-md-6 col-md-6">
                             <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>Enregistrer</a>
@@ -50,11 +62,7 @@
                     </div>
                 </div>
                 {{form_end(form)}}
-
-
-
             </div>
         </main>
-
     </body>
 </html>{% endblock %}

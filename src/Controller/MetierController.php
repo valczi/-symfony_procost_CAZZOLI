@@ -34,16 +34,16 @@ class MetierController extends AbstractController{
      * @Route("/detailM", name="detail_metier")
      */
     public function detailProjet():Response{
-        return $this->render('core/detail_project.html.twig', [
+        return $this->render('core/detail/detail_project.html.twig', [
         ]);
     }
 
             /**
-     * @Route("/formAddM", name="form_add_metier",methods={"GET","POST"})
+     * @Route("/addM", name="add_metier",methods={"GET","POST"})
      */
-    public function form(Request $request):Response{
+    public function addMetier(Request $request):Response{
         $Metier=new Metier();
-        $form=$this->createForm(MetierType::class,$Metier);
+        $form=$this->createForm(MetierType::class);
 
         $form->handleRequest($request);
 
@@ -51,7 +51,30 @@ class MetierController extends AbstractController{
             $this->addFlash('success','Metier rajouté');
             $this->em->persist($Metier);
             $this->em->flush();
-            return $this->redirectToRoute('form_add_metier');
+            return $this->redirectToRoute('add_metier');
+        }
+        
+        return $this->render('core/add/form_metier.html.twig', [
+            'form'=>$form->createView(),
+        ]);
+    }
+
+                /**
+     * @Route("/editM/{id}", name="edit_metier",methods={"GET","POST"})
+     */
+    public function editMetier(Request $request,int$id):Response{
+        $Metier=$this->metierRepo->find($id);
+        $form=$this->createForm(MetierType::class,$Metier);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $this->addFlash('success','Metier modifié');
+            $this->em->flush();
+            return $this->redirectToRoute(
+                'edit_metier',
+                array('id' => $id),
+            );
         }
         
         return $this->render('core/add/form_metier.html.twig', [

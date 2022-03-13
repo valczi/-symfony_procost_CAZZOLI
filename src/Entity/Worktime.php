@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\WorktimeRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WorktimeRepository::class)]
@@ -23,6 +24,14 @@ class Worktime
 
     #[ORM\Column(type: 'integer')]
     private $time;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt=new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +70,18 @@ class Worktime
     public function setTime(int $time): self
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
