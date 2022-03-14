@@ -21,7 +21,7 @@ class EmployeController extends AbstractController{
     }
     
     /**
-     * @Route("/listEmploye", name="list_employe")
+     * @Route("/employe/list", name="employe_list")
      */
     public function listEmploye():Response{
         return $this->render('core/list/list_employe.html.twig', [
@@ -30,7 +30,7 @@ class EmployeController extends AbstractController{
     }
 
         /**
-     * @Route("/formAddE", name="add_employe",methods={"GET","POST"})
+     * @Route("/employe/new", name="employe_add",methods={"GET","POST"})
      */
     public function addEmploye(Request $request):Response{
         $Employe=new Employe();
@@ -42,7 +42,7 @@ class EmployeController extends AbstractController{
             $this->addFlash('success','Employé rajouté');
             $this->em->persist($Employe);
             $this->em->flush();
-            return $this->redirectToRoute('add_employe');
+            return $this->redirectToRoute('employe_add');
         }
         
         return $this->render('core/add/form_employe.html.twig', [
@@ -51,11 +51,9 @@ class EmployeController extends AbstractController{
     }
 
         /**
-     * @Route("/detailE/{id}", name="detail_employe")
+     * @Route("/employe/detail/{id}", name="employe_detail")
      */
     public function detailEmploye(Request $request,int $id):Response{
-
-
 
         $employe = $this->employeRepo->find($id);
         $worktime=new Worktime();
@@ -74,7 +72,7 @@ class EmployeController extends AbstractController{
             $this->em->persist($worktime);
             $this->em->flush();
             return $this->redirectToRoute(
-                'detail_employe',
+                'employe_detail',
                 array('id' => $id),
             );
         }
@@ -87,7 +85,7 @@ class EmployeController extends AbstractController{
     }
 
      /**
-     * @Route("/EditE/{id}", name="edit_employe")
+     * @Route("/employe/edit/{id}", name="edit_employe")
      */
     public function editEmploye(Request $request,int $id):Response{
 

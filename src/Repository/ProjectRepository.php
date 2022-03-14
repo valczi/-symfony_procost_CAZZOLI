@@ -45,6 +45,64 @@ class ProjectRepository extends ServiceEntityRepository
         }
     }
 
+        /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getAllOrdered()
+    {
+        return $this->createQueryBuilder('p')
+        ->OrderBy('p.createdAt','DESC')
+        ->getQuery()
+        ->getResult();
+    }
+
+
+
+            /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getNbWorker(int $id)
+    {
+        $result = $this->createQueryBuilder('p')
+        ->join('p.worktimes', 'w')
+        ->select('COUNT(DISTINCT w.employe)')
+        ->where('p.id = :id')
+        ->setParameter('id',$id)
+        ->getQuery()
+        ->getSingleScalarResult();
+        return $result;
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getNbRentable()
+    {
+
+        //marche po
+        $result = $this->createQueryBuilder('p')
+        ->join('p.worktimes', 'w')
+        ->join('e.worktimes','w')
+        ->from('employe','e')
+        ->groupBy('e.id')
+        ->orderBy('SUM(w.time*e.cost)', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+
+       /* return $this->createQueryBuilder('p')
+        ->OrderBy('p.createdAt','DESC')
+        ->getQuery()
+        ->getResult();*/
+
+        return $result;
+    }
+
+    
+
     // /**
     //  * @return Project[] Returns an array of Project objects
     //  */

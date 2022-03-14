@@ -28,9 +28,7 @@ class Project
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
-  /**
-   * @ORM\Column(type="datetime_immutable", options={"default"=false})
-   */
+    #[ORM\Column(type: 'datetime_immutable',nullable:true)]
     private $DeliveredAt;
 
     #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Worktime::class)]

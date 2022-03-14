@@ -5,13 +5,12 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectController extends AbstractController{
@@ -19,16 +18,47 @@ class ProjectController extends AbstractController{
     public function __construct(private ProjectRepository $projectRepo,private EntityManagerInterface $em){
 
     }
-
-              /**
-     * @Route("/detailP", name="detail_project")
+        /**
+     * @Route("/project/detail/{id}", name="project_detail")
      */
-    public function detailProjet():Response{
+    public function detailProject(int $id):Response{
+
+        $project = $this->projectRepo->find($id);
+
+        if($project==null){
+            throw new NotFoundHttpException();
+        }
+        $worktimes = $project->getWorktimes();
+        $nbWorkers= $this->projectRepo->getNbWorker($project->getId());
         return $this->render('core/detail/detail_project.html.twig', [
+            'project'=>$project,
+            'nbWorkers'=>$nbWorkers,
+            'worktimes'=>$worktimes,
         ]);
     }
+
             /**
-     * @Route("/listProject", name="list_project")
+     * @Route("/project/end/{id}", name="project_end")
+     */
+    public function endProject(int $id):Response{
+
+        $project = $this->projectRepo->find($id);
+
+        if($project==null){
+            throw new NotFoundHttpException();
+        }
+        $project->setDeliveredAt(new DateTimeImmutable());
+        $this->em->flush();
+
+        return $this->redirectToRoute(
+            'project_detail',
+            array('id' => $id),
+        );
+    }
+
+
+            /**
+     * @Route("/project/list", name="project_list")
      */
     public function listProjet():Response{
         return $this->render('core/list/list_project.html.twig', [
@@ -37,7 +67,7 @@ class ProjectController extends AbstractController{
     }
 
             /**
-     * @Route("/formAddP", name="add_project",methods={"GET","POST"})
+     * @Route("/project/new", name="project_add",methods={"GET","POST"})
      */
     public function addProject(Request $request):Response{
         $Project=new Project();
@@ -49,7 +79,7 @@ class ProjectController extends AbstractController{
             $this->addFlash('success','Project rajouté');
             $this->em->persist($Project);
             $this->em->flush();
-            return $this->redirectToRoute('add_project');
+            return $this->redirectToRoute('project_add');
         }
         
         return $this->render('core/add/form_project.html.twig', [
@@ -59,10 +89,17 @@ class ProjectController extends AbstractController{
 
     
             /**
-     * @Route("/EditP/{id}", name="edit_project",methods={"GET","POST"})
+     * @Route("/project/edit/{id}", name="project_edit",methods={"GET","POST"})
      */
-    public function dditProject(Request $request,int $id):Response{
+    public function editProject(Request $request,int $id):Response{
         $Project=$this->projectRepo->find($id);
+
+        if($Project->getDeliveredAt()!=null){
+            return $this->redirectToRoute(
+                'project_list',
+            );
+        }
+
         $form=$this->createForm(ProjectType::class,$Project);
 
         $form->handleRequest($request);
@@ -71,7 +108,7 @@ class ProjectController extends AbstractController{
             $this->addFlash('success','Project modifié');
             $this->em->flush();
             return $this->redirectToRoute(
-                'edit_project',
+                'project_edit',
                 array('id' => $id),
             );
         }

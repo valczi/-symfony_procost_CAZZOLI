@@ -106,6 +106,14 @@ class Employe
         return $this;
     }
 
+    public function totalCost():int{
+        $total=0;
+        $worktimes=$this->getWorktimes();
+        foreach($worktimes as $worktime)
+            $total+=$worktime->getTime()*$this->getCost();
+        return $total;
+    }
+
     /**
      * @return Collection<int, Worktime>
      */

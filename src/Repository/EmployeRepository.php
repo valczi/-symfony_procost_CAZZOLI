@@ -45,6 +45,52 @@ class EmployeRepository extends ServiceEntityRepository
         }
     }
 
+        /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function nbEmploye()
+    {
+        $total = $this->createQueryBuilder('e')
+        ->select('COUNT(e.id)')
+        ->getQuery()
+        ->getSingleScalarResult();
+
+        return $total;
+    }
+
+            /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function bestEmploye()
+    {
+
+              /*$result= $this->_em->createQuery('
+        CREATE TEMPORARY TABLE time
+        SELECT  e.id , e.name , SUM(e.cost*w.time) as somme
+        FROM worktime as w , employe as e
+        WHERE w.employe_id=e.id
+        GROUP BY e.id
+        ;
+
+        SELECT t.id,t.name , t.somme
+        FROM time as t
+        WHERE t.somme=(select max(somme) from time)'
+        )
+        ->getArrayResult();*/
+
+        $result = $this->createQueryBuilder('e')
+        ->join('e.worktimes', 'w')
+        ->groupBy('e.id')
+        ->orderBy('SUM(w.time*e.cost)', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+
+        return $result;
+    }
+
     // /**
     //  * @return Employe[] Returns an array of Employe objects
     //  */

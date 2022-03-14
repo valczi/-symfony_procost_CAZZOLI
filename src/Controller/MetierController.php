@@ -22,7 +22,7 @@ class MetierController extends AbstractController{
 
 
            /**
-     * @Route("/listMetier", name="list_metier")
+     * @Route("/metier/list", name="metier_list")
      */
     public function listMetier():Response{
         return $this->render('core/list/list_metier.html.twig', [
@@ -30,16 +30,9 @@ class MetierController extends AbstractController{
         ]);
     }
 
-            /**
-     * @Route("/detailM", name="detail_metier")
-     */
-    public function detailProjet():Response{
-        return $this->render('core/detail/detail_project.html.twig', [
-        ]);
-    }
 
             /**
-     * @Route("/addM", name="add_metier",methods={"GET","POST"})
+     * @Route("/metier/new", name="add_metier",methods={"GET","POST"})
      */
     public function addMetier(Request $request):Response{
         $Metier=new Metier();
@@ -60,7 +53,7 @@ class MetierController extends AbstractController{
     }
 
                 /**
-     * @Route("/editM/{id}", name="edit_metier",methods={"GET","POST"})
+     * @Route("/metier/edit/{id}", name="edit_metier",methods={"GET","POST"})
      */
     public function editMetier(Request $request,int$id):Response{
         $Metier=$this->metierRepo->find($id);

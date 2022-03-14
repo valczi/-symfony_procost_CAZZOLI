@@ -45,6 +45,28 @@ class WorktimeRepository extends ServiceEntityRepository
         }
     }
 
+    
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getTimeAll()
+    {
+        $result = $this->createQueryBuilder('w')
+        ->select('SUM(w.time)')
+        ->getQuery()
+        ->getSingleScalarResult();
+
+        return $result;
+    }
+
+    public function getFiveLast(){
+        $result = $this->createQueryBuilder('w')->orderBy('w.createdAt', 'DESC')->setMaxResults(4)->getQuery()->getResult();
+        return $result;
+    }
+
+
+
     // /**
     //  * @return Worktime[] Returns an array of Worktime objects
     //  */

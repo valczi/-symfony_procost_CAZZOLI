@@ -1,14 +1,16 @@
 <tr>
     <td>{{project.nom}}  </td>
     <td>{{project.description}}</td>
-    <td>{{project.cost}}</td>
+    <td>{{project.cost}} €</td>
     <td>{{project.createdAt | date("m-d-Y")}}</td>
     <td>
-        <a href={{path('detail_project')}} class="btn btn-primary btn-sm">
+        <a href={{path('project_detail',{'id' : project.id})}} class="btn btn-primary btn-sm">
             <i class="fa fa-eye mr-0"></i>
         </a>
-        <a href={{path('edit_project',{'id' : project.id})}} class="btn btn-info btn-sm">
+        {% if project.DeliveredAt == null %}
+        <a href={{path('project_edit',{'id' : project.id})}} class="btn btn-info btn-sm">
             <i class="fa fa-pencil mr-0"></i>
         </a>
+        {% endif %}
     </td>
 </tr>

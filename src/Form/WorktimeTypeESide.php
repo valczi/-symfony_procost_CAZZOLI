@@ -26,7 +26,8 @@ class WorktimeTypeESide extends AbstractType
                 "choice_label"=>'nom',
                 "query_builder" => function (ProjectRepository $repository) {
                     return $repository->createQueryBuilder("j")
-                        ->orderBy("j.nom", "ASC");
+                        ->orderBy("j.nom", "ASC")
+                        ->where('j.DeliveredAt IS NULL');
                 },
             ])
         ;
