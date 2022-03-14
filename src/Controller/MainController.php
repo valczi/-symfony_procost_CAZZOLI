@@ -24,18 +24,22 @@ class MainController extends AbstractController{
      * @Route("/", name="main_homepage")
      */
     public function homepage():Response{
-        $allProjects=$this->projectRepo->getAllOrdered();
+        $allProjects=$this->worktimeRepository->getAllProjectsWithPrice();
         $bestEmploye=$this->employeRepo->bestEmploye();
+
+        //dd($allProjects);
+
         $last5Worktimes=$this->worktimeRepository->getFiveLast();
-        $timeProd=$this->worktimeRepository->getTimeAll();
+
+        $timeProd=$this->worktimeRepository->getTimeAll();      
 
         $projectDelivered=0;
         $projetRentable=0;
 
         foreach ($allProjects as $project) {
-            if($project->getDeliveredAt()!=null)
+            if($project['DeliveredAt']!=null)
                 $projectDelivered++;
-            if($project->getTotalCost()<$project->getCost())
+            if($project['total']<$project['cost'])
                 $projetRentable++;
         }
         $nbProject=sizeof($allProjects);
@@ -45,7 +49,7 @@ class MainController extends AbstractController{
             'rentable'=>$pourcentageRentable,
             'pourcentage'=>$pourcentageDone,
             'delivered'=>$projectDelivered,
-            'nbEmploye'=>$nbProject,
+            'nbEmploye'=>$this->employeRepo->getNbWorker(),
             'inProgress'=>$nbProject-$projectDelivered,
             'bestEmploye'=>$bestEmploye,
             'projects'=>array_slice($allProjects,0,5), 

@@ -119,7 +119,7 @@
                                     <a href={{path('project_edit',{'id' : project.id})}}>{{project.nom}}</a>
                                     </th>
                                     <td>{{project.createdAt | date("m-d-Y")}}</td>
-                                    <td>{{project.totalCost}} € </td>
+                                    <td>{{project.total}} € </td>
                                     <td>{{project.cost}} €</td>
                                     {% if project.DeliveredAt != null %}
                                     <th>

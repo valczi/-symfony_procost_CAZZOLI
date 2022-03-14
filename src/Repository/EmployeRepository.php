@@ -63,6 +63,19 @@ class EmployeRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    public function findAllQuery()
+    {
+        $total = $this->createQueryBuilder('e')
+        ->getQuery();
+
+        return $total;
+    }
+
+
+            /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function bestEmploye()
     {
 
@@ -87,6 +100,20 @@ class EmployeRepository extends ServiceEntityRepository
         ->setMaxResults(1)
         ->getQuery()
         ->getOneOrNullResult();
+
+        return $result;
+    }
+
+          /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getNbWorker()
+    {
+        $result = $this->createQueryBuilder('p')
+        ->select('COUNT(p.id)')
+        ->getQuery()
+        ->getSingleScalarResult();
 
         return $result;
     }

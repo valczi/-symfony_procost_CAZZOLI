@@ -101,6 +101,17 @@ class ProjectRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function findAllQuery()
+    {
+        $total = $this->createQueryBuilder('e')
+        ->getQuery();
+
+        return $total;
+    }
     
 
     // /**

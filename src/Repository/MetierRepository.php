@@ -45,6 +45,19 @@ class MetierRepository extends ServiceEntityRepository
         }
     }
 
+               /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function findAllQuery()
+    {
+        $total = $this->createQueryBuilder('e')
+        ->getQuery();
+
+        return $total;
+    }
+
+
     // /**
     //  * @return Metier[] Returns an array of Metier objects
     //  */

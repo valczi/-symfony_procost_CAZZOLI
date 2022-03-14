@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Employe;
+use App\Entity\Project;
 use App\Entity\Worktime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -65,6 +67,55 @@ class WorktimeRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function getAllProjectsWithPrice(){
+        $result = $this->createQueryBuilder('w')
+        ->select('p.id, p.nom, p.createdAt, p.cost, p.DeliveredAt, SUM(w.time) as time, SUM(w.time * e.cost) as total')
+        ->innerJoin('w.projet', 'p')
+        ->innerJoin('w.employe', 'e')
+        ->groupBy('p.id')
+        ->orderBy('p.id', 'DESC')
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
+
+    public function getByIdQuery(int $id){
+        $result = $this->createQueryBuilder('w')
+        ->orderBy('w.createdAt', 'DESC')
+        ->where('w.id = :id')
+        ->setParameter('id',$id)
+        ->getQuery();
+
+        return $result;
+    }
+
+               /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getWorktimesQuery(Employe $id)
+    {
+        $result = $this->createQueryBuilder('w')
+        ->where('w.employe = :id')
+        ->setParameter('id',$id)
+        ->getQuery();
+
+        return $result;
+    }
+
+                  /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function getWorktimesRpojectQuery(Project $id)
+    {
+        $result = $this->createQueryBuilder('w')
+        ->where('w.projet = :id')
+        ->setParameter('id',$id)
+        ->getQuery();
+
+        return $result;
+    }
 
 
     // /**

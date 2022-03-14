@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
+use App\Repository\WorktimeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,20 +17,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectController extends AbstractController{
 
-    public function __construct(private ProjectRepository $projectRepo,private EntityManagerInterface $em){
+    public function __construct(private ProjectRepository $projectRepo,private WorktimeRepository $worktimeRepo, private EntityManagerInterface $em){
 
     }
         /**
      * @Route("/project/detail/{id}", name="project_detail")
      */
-    public function detailProject(int $id):Response{
+    public function detailProject(int $id,PaginatorInterface $paginator,Request $request):Response{
 
         $project = $this->projectRepo->find($id);
 
         if($project==null){
             throw new NotFoundHttpException();
         }
-        $worktimes = $project->getWorktimes();
+
+        $donnes = $this->worktimeRepo->getWorktimesRpojectQuery($project);
+
+        $worktimes= $paginator->paginate(
+            $donnes, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+
         $nbWorkers= $this->projectRepo->getNbWorker($project->getId());
         return $this->render('core/detail/detail_project.html.twig', [
             'project'=>$project,
@@ -60,9 +70,16 @@ class ProjectController extends AbstractController{
             /**
      * @Route("/project/list", name="project_list")
      */
-    public function listProjet():Response{
+    public function listProjet(PaginatorInterface $paginator, Request $request):Response{
+        $donnes=$this->projectRepo->findAllQuery();
+        $projects= $paginator->paginate(
+            $donnes, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+
         return $this->render('core/list/list_project.html.twig', [
-            'projects'=>$this->projectRepo->findAll(),
+            'projects'=>$projects,
         ]);
     }
 

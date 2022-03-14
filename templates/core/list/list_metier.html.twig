@@ -4,13 +4,13 @@
         <main class="app-content">
             <div class="app-title">
                 <div>
-                    <h1><i class="fa fa-users"></i>&nbsp;Projects</h1>
+                    <h1><i class="fa fa-users"></i>&nbsp;Metiers</h1>
                 </div>
                 <ul class="app-breadcrumb breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="#"><i class="fa fa-home fa-lg"></i></a>
                     </li>
-                    <li class="breadcrumb-item">Projects</li>
+                    <li class="breadcrumb-item">Metiers</li>
                 </ul>
             </div>
             <div class="tile pb-5">
@@ -35,22 +35,7 @@
                 </div>
                 <hr/>
                 <nav class="float-right">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <span class="page-link">&laquo;</span>
-                        </li>
-                        <li class="page-item active" aria-current="page">
-                            <span class="page-link">1<span class="sr-only">(current)</span></span>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a></li>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">&raquo;</a>
-                        </li>
+                     {{ knp_pagination_render(metiers, '@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig') }}
                     </ul>
                 </nav>
             </div>

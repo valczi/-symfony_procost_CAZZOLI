@@ -7,7 +7,9 @@ use App\Entity\Employe;
 use App\Entity\Worktime;
 use App\Form\EmployeType;
 use App\Form\WorktimeTypeESide;
+use App\Repository\WorktimeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,16 +18,24 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EmployeController extends AbstractController{
 
-    public function __construct(private EmployeRepository $employeRepo,private EntityManagerInterface $em){
+    public function __construct(private WorktimeRepository $worktimeRepo, private EmployeRepository $employeRepo,private EntityManagerInterface $em){
 
     }
     
     /**
      * @Route("/employe/list", name="employe_list")
      */
-    public function listEmploye():Response{
+    public function listEmploye(PaginatorInterface $paginator, Request $request):Response{
+        $donnes=$this->employeRepo->findAllQuery();
+        $employes= $paginator->paginate(
+            $donnes, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+        
+
         return $this->render('core/list/list_employe.html.twig', [
-            'employes'=>$this->employeRepo->findAll(),
+            'employes'=>$employes,
         ]);
     }
 
@@ -53,7 +63,7 @@ class EmployeController extends AbstractController{
         /**
      * @Route("/employe/detail/{id}", name="employe_detail")
      */
-    public function detailEmploye(Request $request,int $id):Response{
+    public function detailEmploye(PaginatorInterface $paginator,Request $request,int $id):Response{
 
         $employe = $this->employeRepo->find($id);
         $worktime=new Worktime();
@@ -61,7 +71,14 @@ class EmployeController extends AbstractController{
         if($employe==null){
             throw new NotFoundHttpException();
         }
-        $listWorktimes=$employe->getWorktimes();
+
+        $donnes=$this->worktimeRepo->getWorktimesQuery($employe);
+
+        $worktimes= $paginator->paginate(
+            $donnes, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
 
         $worktime->setEmploye($employe);
         $form=$this->createForm(WorktimeTypeESide::class,$worktime);
@@ -79,7 +96,7 @@ class EmployeController extends AbstractController{
 
         return $this->render('core/detail/detail_employe.html.twig', [
             'employe'=>$employe,
-            'worktimes'=>$listWorktimes,
+            'worktimes'=>$worktimes,
             'form'=>$form->createView(),
         ]);
     }
@@ -90,6 +107,7 @@ class EmployeController extends AbstractController{
     public function editEmploye(Request $request,int $id):Response{
 
         $employe=$this->employeRepo->find($id);
+        
         if($employe==null){
             throw new NotFoundHttpException();
         }
